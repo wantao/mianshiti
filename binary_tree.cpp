@@ -68,22 +68,29 @@ void binary_tree_visit_post_order(pBTree u_bTree)
 
 int compare_tree(pBTree u_bTree1,pBTree u_bTree2)
 {
-	bool isTree1Null = (u_bTree1 == NULL);
-	bool isTree2Null = (u_bTree2 == NULL);
-	if (isTree1Null != isTree2Null)
+	if (!u_bTree1 && !u_bTree2)
 	{
 		return 1;
 	}
-	if (isTree1Null && isTree2Null) 
+	if ((!u_bTree1 && u_bTree2) || (u_bTree1 && !u_bTree2))
 	{
 		return 0;
 	}
-	if (u_bTree1->data != u_bTree2->data)
+	if (u_bTree1 && u_bTree2)
 	{
-		return 1;
+		if (u_bTree1->data == u_bTree2->data)
+		{
+			if (compare_tree(u_bTree1->left,u_bTree2->left))
+			{
+				return compare_tree(u_bTree1->right,u_bTree2->right);
+			}
+			else if (compare_tree(u_bTree1->left,u_bTree2->right))
+			{
+				return compare_tree(u_bTree1->right,u_bTree2->left);
+			}
+		}
 	}
-	return (compare_tree(u_bTree1->left,u_bTree2->left)  & compare_tree(u_bTree1->right,u_bTree2->right)) || \
-		(compare_tree(u_bTree1->left,u_bTree2->right) & compare_tree(u_bTree1->right,u_bTree2->left));
+	return 0;
 }
 
 
@@ -107,7 +114,7 @@ int main(void)
 	binary_tree_visit_post_order(bTree2);
 
 	int compResult = compare_tree(bTree1,bTree2);
-	if (compResult == 0)
+	if (compResult == 1)
 	{
 		printf("\n bTree1 bTree2 is equal\n");
 	}
